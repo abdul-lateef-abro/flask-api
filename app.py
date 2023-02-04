@@ -1,72 +1,47 @@
-import json
 from flask import Flask, jsonify, request
-
 app = Flask(__name__)
 
-@app.route("/", methods = ["GET"])
+list = ["task1", "task2", "task3"]
+
+@app.route('/', methods=['GET', 'POST'])
+def welcome():
+    return "Hello World!"
+
+@app.route('/main', methods=['GET', 'POST'])
 def main():
-    return "hello world 123"
+    return "main page!"
 
-@app.route("/hello_world", methods = ["GET"])
-def hello_world():
-    return "another hello world page"
+# @app.route('/', defaults={'path': ''})
+# @app.route('/<path:path>', methods=['GET', 'POST'])
+# def pages(path):
+#     return f"on page number {path}!"
 
-@app.route("/my_ml_model", methods = ["GET"])
-def my_ml_model():
-    a=3;b=5
-    return f"{a+b}"
+@app.route('/<int:number>', methods=['GET', 'POST'])
+def pages(number):
+    return f"on page number {number}!"
 
-# @app.route("/<string:str>", methods = ["GET"])
-# def dynamic_string(str):
-#     return f"hello from {str}"
+@app.route('/jsonify', methods=['GET', 'POST'])
+def user_data():
+    return jsonify({'name':'paul', 'age':12})
 
-# @app.route("/<int:value>", methods = ["GET"])
-# def dynamic_integer(value):
-#     return f"value = {value}"
+@app.route('/arguments', methods = ['GET'])
+def get_args():
+    # print(request.args.listvalues())
+    print(request.args.to_dict())
+    return request.args.to_dict()
 
-@app.route("/   ", methods = ["GET"])
-def json_data():
-    dict_ = {
-        "name":"awais",
-        "class":"KAI"
-    }
-    return dict_
 
-@app.route("/status_code", methods = ["GET"])
-def status_code():
-    try:
-        print(1/0)
-        return "successful", 200
-    except:
-        return "failed", 500
-
-@app.route("/arguments", methods = ["GET"])
-def arguments():
-    try:
-        page = request.args.get('page')
-        name = request.args.get('name')
-        all_params = request.args.to_dict()
-        # return f"page is: {page} \n name is: {name}"
-        return jsonify(all_params), 200
-    except:
-        return "page error", 500
-
-@app.route("/send_data", methods = ["GET", "POST"])
+@app.route('/send_data', methods=['POST'])
 def send_data():
-    if request.method == "GET":
-        return "invalid method call", 500
-    if request.method == "POST":
-        if request.content_type == 'application/json':
-            data = request.json
-        else:
-            data = request.data
-        
-        print(data)
-        return jsonify(data), 200
+    data = request.json
+    data['name']
+    return data
+
+# if __name__ == '__main__':
+app.run(host='0.0.0.0', port=105, debug=True)
 
 
-if __name__ == "__main__":
-    app.run(
-        debug=True,
-        host="0.0.0.0",
-        port= 8000)
+# welcome page
+# list tasks
+# add task
+# deletes
